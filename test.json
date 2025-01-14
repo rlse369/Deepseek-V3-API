@@ -74,6 +74,86 @@
     {
         "question": "What customization options are available in settings?",
         "answer": "In the 'Settings' section of 'Account Management', you can switch between light and dark mode."
+    },
+    {
+        "question": "How do I choose the right GPU type for my machine learning model?",
+        "answer": "The choice of GPU depends on your model’s complexity and resource requirements. Larger models requiring significant computation may benefit from high-memory GPUs. You can check available GPU types and their specifications during container creation."
+    },
+    {
+        "question": "What are the steps to mount external storage in a container?",
+        "answer": "First, create a storage device in 'Storage Management' by specifying the name, type, and permissions. Then, during container creation, select the storage and assign a mount path in the advanced settings."
+    },
+    {
+        "question": "Can I run multiple jobs simultaneously on a single container?",
+        "answer": "Yes, you can enable multi-threading when scheduling jobs. This allows multiple jobs to execute in parallel, improving efficiency for tasks that can run concurrently."
+    },
+    {
+        "question": "How do I install additional Python packages in my container?",
+        "answer": "You can install packages by SSH-ing into the running container and using pip or conda. Alternatively, create a custom image with pre-installed packages for reuse."
+    },
+    {
+        "question": "What happens if my job exceeds the allocated GPU quota?",
+        "answer": "If a job exceeds the allocated GPU quota, it will be paused or terminated. You can request an increase in GPU quota by submitting a quota application under 'Project Management'."
+    },
+    {
+        "question": "How can I track the logs of a running job?",
+        "answer": "You can view job logs by clicking on the job in the 'Job List'. Detailed logs, including output and errors, are available under the 'Logs' tab."
+    },
+    {
+        "question": "Is it possible to restart a failed job?",
+        "answer": "Yes, failed jobs can be restarted by selecting the job from the job list and clicking 'Restart'. Ensure the underlying issue is resolved before restarting."
+    },
+    {
+        "question": "What frameworks are supported by AI-Stack?",
+        "answer": "AI-Stack supports popular machine learning frameworks like TensorFlow, PyTorch, Keras, and Scikit-Learn. You can select the desired framework during container creation."
+    },
+    {
+        "question": "How do I share a container with another team member?",
+        "answer": "Containers can be shared by adding team members to the project. Ensure the container has shared access permissions enabled when it is created."
+    },
+    {
+        "question": "Can I schedule recurring jobs, and how?",
+        "answer": "Yes, you can schedule recurring jobs by creating a job template and linking it to a recurring job schedule. Set the frequency, start time, and end time in the 'Job Scheduling' section."
+    },
+    {
+        "question": "How do I manage and use SSH key pairs for my containers?",
+        "answer": "To use SSH, create or import a key pair under 'Advanced Settings > Key Pair'. During container creation, select the desired key pair for secure access."
+    },
+    {
+        "question": "What is the purpose of shared memory in a container?",
+        "answer": "Shared memory allows two or more processes to access the same block of memory, which is useful for multi-GPU containers to enhance parallel computation."
+    },
+    {
+        "question": "How can I monitor the overall performance of my project resources?",
+        "answer": "You can monitor performance by viewing the 'Provisioning' tab in 'Container Management', which provides metrics such as GPU utilization, CPU usage, memory usage, and network I/O."
+    },
+    {
+        "question": "Can I modify a container after it has been created?",
+        "answer": "Once a container is created, you cannot modify its specifications directly. However, you can create a new container with updated settings or create a custom image for future use."
+    },
+    {
+        "question": "How do I back up my data before deleting a container?",
+        "answer": "Ensure your data is stored in a mounted external storage device. Data in mounted storage remains intact even after the container is deleted."
+    },
+    {
+        "question": "Can I limit access to specific project resources for certain users?",
+        "answer": "Yes, access control can be managed by assigning specific roles to users within a project. Only project managers have full control over resource allocation."
+    },
+    {
+        "question": "What happens when a project reaches its end date without extension?",
+        "answer": "The platform will release all allocated resources after the end date. A 14-day buffering period is provided during which resources remain inaccessible but can still be extended."
+    },
+    {
+        "question": "How do I create a job template for repetitive tasks?",
+        "answer": "Go to 'Advanced Settings > Job Template' and create a new template by specifying the GPU type, hardware specifications, and commands. This template can be used to run jobs repeatedly."
+    },
+    {
+        "question": "Is there a way to view past jobs and their statuses?",
+        "answer": "Yes, you can view past jobs and their statuses in the 'Job List' section under 'Job Management'. Each job entry includes details such as name, start time, end time, and status."
+    },
+    {
+        "question": "Can I integrate AI-Stack with external data sources?",
+        "answer": "Yes, external data sources can be integrated by mounting external storage devices during container creation. Ensure the storage is properly configured in 'Storage Management'."
     }
 ]
   

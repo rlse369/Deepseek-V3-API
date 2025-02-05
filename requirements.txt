@@ -1,0 +1,7 @@
+flask
+flask-session
+requests
+charset_normalizer
+python-docx
+pypdf2
+gunicorn

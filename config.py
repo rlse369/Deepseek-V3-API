@@ -13,5 +13,5 @@ class Config:
     API_URL = "https://api.hyperbolic.xyz/v1/chat/completions"
     API_HEADERS = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyYWNoZWFsLmxlZUBmbGV4aW5mcmEuY29tLm15IiwiaWF0IjoxNzM2MTQ3MzY2fQ.TDeyieSxa7NbESTSKvIZSQXTxQYOR0UxkoZSBsxuSXk"
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyYWNoZWFsLmxlZUBmbGV4aW5mcmEuY29tLm15IiwiaWF0IjoxNzM4ODEyMDgzfQ.8jhzzRy0MnQmucU2a1KM3wr1eaO5Nng0YS5lrSk3K6c"
     }

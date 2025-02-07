@@ -21,8 +21,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 API_URL = "https://api.hyperbolic.xyz/v1/chat/completions"
 API_HEADERS = {
     "Content-Type": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyYWNoZWFsLmxlZUBmbGV4aW5mcmEuY29tLm15IiwiaWF0IjoxNzM2MTQ3MzY2fQ.TDeyieSxa7NbESTSKvIZSQXTxQYOR0UxkoZSBsxuSXk"
-}
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyYWNoZWFsLmxlZUBmbGV4aW5mcmEuY29tLm15IiwiaWF0IjoxNzM4ODEyMDgzfQ.8jhzzRy0MnQmucU2a1KM3wr1eaO5Nng0YS5lrSk3K6c"}
 
 # Store conversation state
 conversation_history = []
@@ -73,4 +72,4 @@ def chat():
     return jsonify({"error": response.text}), response.status_code
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=8000)

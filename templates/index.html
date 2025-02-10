@@ -69,93 +69,91 @@
         </form>
     </div>
 
-    <script>
-        $(document).ready(function () {
-            const chatForm = $('#chat-form');
-            const submitButton = chatForm.find('button[type="submit"]');
-            const chatWindow = $('#chat-window');
-            const fileInput = $('#file');
-            const contentInput = $('#content');
+<script>
+    $(document).ready(function () {
+        const chatForm = $('#chat-form');
+        const submitButton = chatForm.find('button[type="submit"]');
+        const chatWindow = $('#chat-window');
+        const fileInput = $('#file');
+        const contentInput = $('#content');
 
-            let isProcessing = false;
+        let isProcessing = false;
+    
+        chatForm.on('submit', function (e) {
+            e.preventDefault();
+            if (isProcessing) return; // Prevent duplicate requests
 
-            // Handle Enter key press inside the textarea
-            contentInput.on("keydown", function (event) {
-                if (event.key === "Enter" && !event.shiftKey) {
-                    if (!isProcessing) {
-                        event.preventDefault(); // Prevents newline
-                        chatForm.submit(); // Submit the form
-                    }
+            isProcessing = true;
+            submitButton.prop('disabled', true);
+
+            const content = contentInput.val().trim();
+            if (!content) {
+                alert("Error: Input is required.");
+                isProcessing = false;
+                submitButton.prop('disabled', false);
+                return;
+            }
+
+            const formData = new FormData(this);
+
+            // Append user message immediately
+            chatWindow.append(`
+                <div class="message user">
+                    <div class="bubble">${content}</div>
+                </div>
+            `);
+            chatWindow.scrollTop(chatWindow[0].scrollHeight);
+            contentInput.val('');
+            fileInput.val('');
+
+            $.ajax({
+                url: '/chat', // Make sure this matches your backend route
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    let aiMessage = response.choices?.[0]?.message?.content || "No response from AI.";
+
+                    aiMessage = aiMessage
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                        .replace(/\*(.*?)\*/g, '<em>$1</em>')          // Italic
+                        .replace(/^###\s+(.*)$/gm, '<h3>$1</h3>')       // H3 Headings
+                        .replace(/^####\s+(.*)$/gm, '<h4>$1</h4>')      // H4 Headings
+                        .replace(/---/g, '<hr>')                        // Horizontal Rule
+                        .replace(/^\s*[-*]\s+(.*)$/gm, '<li>$1</li>')  // Bullet Points
+                        .replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>')      // Wrap <ul> around <li>
+                        .replace(/^(?!<h3>|<ul>|<\/ul>|<li>).*$/gm, '<p>$&</p>'); // Paragraphs
+
+                    chatWindow.append(`
+                        <div class="message ai">
+                            <div class="bubble">${aiMessage}</div>
+                        </div>
+                    `);
+                    chatWindow.scrollTop(chatWindow[0].scrollHeight);
+                },
+                error: function (err) {
+                    console.error("Error:", err.responseText || "Unknown error");
+                    alert("Error occurred while communicating with the server.");
+                },
+                complete: function () {
+                    isProcessing = false;
+                    submitButton.prop('disabled', false);
                 }
-            });
-
-            chatForm.on('submit', function (e) {
-                e.preventDefault();
-
-                if (isProcessing) return; // Prevent multiple requests
-
-                const content = contentInput.val().trim();
-                if (!content) {
-                    alert("Error: Input is required.");
-                    return;
-                }
-
-                // Disable inputs during request
-                isProcessing = true;
-                submitButton.prop('disabled', true);
-                contentInput.prop('disabled', true);
-
-                const formData = new FormData(this);
-
-                chatWindow.append(`
-                    <div class="message user">
-                        <div class="bubble">${content}</div>
-                    </div>
-                `);
-                chatWindow.scrollTop(chatWindow[0].scrollHeight);
-                contentInput.val('');
-                fileInput.val('');
-
-                $.ajax({
-                    url: '/chat',
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        let aiMessage = response.choices[0]?.message?.content || "No response from AI.";
-
-                        // Replace Markdown-like syntax with HTML
-                        aiMessage = aiMessage
-                            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
-                            .replace(/\*(.*?)\*/g, '<em>$1</em>')          // Italic
-                            .replace(/^###\s+(.*)$/gm, '<h3>$1</h3>')       // H3 Headings
-                            .replace(/^####\s+(.*)$/gm, '<h4>$1</h4>')      // H4 Headings
-                            .replace(/---/g, '<hr>')                        // Horizontal Rule
-                            .replace(/^\s*[-*]\s+(.*)$/gm, '<li>$1</li>')  // Bullet Points
-                            .replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>')      // Wrap <ul> around <li>
-                            .replace(/^(?!<h3>|<ul>|<\/ul>|<li>).*$/gm, '<p>$&</p>'); // Paragraphs
-
-                        chatWindow.append(`
-                            <div class="message ai">
-                                <div class="bubble">${aiMessage}</div>
-                            </div>
-                        `);
-                        chatWindow.scrollTop(chatWindow[0].scrollHeight);
-                    },
-                    error: function (err) {
-                        console.error("Error:", err.responseText || "Unknown error");
-                        alert("Error occurred while communicating with the server.");
-                    },
-                    complete: function () {
-                        // Re-enable inputs after request completes
-                        isProcessing = false;
-                        submitButton.prop('disabled', false);
-                        contentInput.prop('disabled', false);
-                    }
-                });
             });
         });
-    </script>
-</body>
-</html>
+        // Allow "Enter" key to submit the form (without shift key)
+        contentInput.on('keydown', function (e) {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                if (!isProcessing) { 
+                    chatForm.submit(); 
+                }
+            }
+            if (isProcessing && e.key === "Enter") {
+                event.preventDefault(); // Disable Enter key while processing
+                return;
+            }
+        });
+    });
+</script>

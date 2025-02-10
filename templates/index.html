@@ -75,30 +75,47 @@
             const submitButton = chatForm.find('button[type="submit"]');
             const chatWindow = $('#chat-window');
             const fileInput = $('#file');
-    
+            const contentInput = $('#content');
+
+            let isProcessing = false;
+
+            // Handle Enter key press inside the textarea
+            contentInput.on("keydown", function (event) {
+                if (event.key === "Enter" && !event.shiftKey) {
+                    if (!isProcessing) {
+                        event.preventDefault(); // Prevents newline
+                        chatForm.submit(); // Submit the form
+                    }
+                }
+            });
+
             chatForm.on('submit', function (e) {
                 e.preventDefault();
-    
-                const content = $('#content').val().trim();
-    
+
+                if (isProcessing) return; // Prevent multiple requests
+
+                const content = contentInput.val().trim();
                 if (!content) {
                     alert("Error: Input is required.");
                     return;
                 }
-    
+
+                // Disable inputs during request
+                isProcessing = true;
                 submitButton.prop('disabled', true);
-    
+                contentInput.prop('disabled', true);
+
                 const formData = new FormData(this);
-    
+
                 chatWindow.append(`
                     <div class="message user">
                         <div class="bubble">${content}</div>
                     </div>
                 `);
                 chatWindow.scrollTop(chatWindow[0].scrollHeight);
-                $('#content').val('');
+                contentInput.val('');
                 fileInput.val('');
-    
+
                 $.ajax({
                     url: '/chat',
                     method: 'POST',
@@ -107,7 +124,7 @@
                     contentType: false,
                     success: function (response) {
                         let aiMessage = response.choices[0]?.message?.content || "No response from AI.";
-    
+
                         // Replace Markdown-like syntax with HTML
                         aiMessage = aiMessage
                             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
@@ -118,7 +135,7 @@
                             .replace(/^\s*[-*]\s+(.*)$/gm, '<li>$1</li>')  // Bullet Points
                             .replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>')      // Wrap <ul> around <li>
                             .replace(/^(?!<h3>|<ul>|<\/ul>|<li>).*$/gm, '<p>$&</p>'); // Paragraphs
-    
+
                         chatWindow.append(`
                             <div class="message ai">
                                 <div class="bubble">${aiMessage}</div>
@@ -131,7 +148,10 @@
                         alert("Error occurred while communicating with the server.");
                     },
                     complete: function () {
+                        // Re-enable inputs after request completes
+                        isProcessing = false;
                         submitButton.prop('disabled', false);
+                        contentInput.prop('disabled', false);
                     }
                 });
             });
